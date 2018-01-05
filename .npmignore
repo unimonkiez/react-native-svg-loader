@@ -1,0 +1,14 @@
+node_modules/
+bin/
+src/module/
+.editorconfig
+.eslintrc
+.gitignore
+yarn.lock
+.travis.yml
+
+src/*.test.js
+src/*.test.jsx
+src/*.spec.js
+src/*.spec.jsx
+src/test*.*

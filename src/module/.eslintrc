@@ -1,0 +1,9 @@
+{
+  "parser": "babel-eslint",
+  "extends": "../../bin/webpack-eslint.js",
+  "rules": {
+    "import/no-unresolved": [0],
+    "import/extensions": [0],
+    "react/prefer-stateless-function": [0]
+  }
+}
