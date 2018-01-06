@@ -111,23 +111,24 @@ ${(!hasChilds) ? `${spaceStr})` : childs.join(',\n')}${(hasChilds) ? `\n${spaceS
     getModuleBody(rootSVG) {
       return utils.trimFirstRow(`
 var React = require('react');
-var Svg = require('react-native-svg');
+var ReactNativeSvg = require('react-native-svg');
 var getSvgComponent = require('react-native-svg-loader/lib/get-svg-component');
 
-var Circle = Svg.Circle;
-var Ellipse = Svg.Ellipse;
-var G = Svg.G;
-var LinearGradient = Svg.LinearGradient;
-var RadialGradient = Svg.RadialGradient;
-var Line = Svg.Line;
-var Path = Svg.Path;
-var Polygon = Svg.Polygon;
-var Polyline = Svg.Polyline;
-var Rect = Svg.Rect;
-var Text = Svg.Text;
-var TSpan = Svg.TSpan;
-var Defs = Svg.Defs;
-var Stop = Svg.Stop;
+var Svg = ReactNativeSvg.default;
+var Circle = ReactNativeSvg.Circle;
+var Ellipse = ReactNativeSvg.Ellipse;
+var G = ReactNativeSvg.G;
+var LinearGradient = ReactNativeSvg.LinearGradient;
+var RadialGradient = ReactNativeSvg.RadialGradient;
+var Line = ReactNativeSvg.Line;
+var Path = ReactNativeSvg.Path;
+var Polygon = ReactNativeSvg.Polygon;
+var Polyline = ReactNativeSvg.Polyline;
+var Rect = ReactNativeSvg.Rect;
+var Text = ReactNativeSvg.Text;
+var TSpan = ReactNativeSvg.TSpan;
+var Defs = ReactNativeSvg.Defs;
+var Stop = ReactNativeSvg.Stop;
 
 function SvgRoughComponent(props) {
   var width = props.width;
