@@ -102,11 +102,11 @@ module.exports = getSvgComponent(SvgRoughComponent);
       const spaceStr = ' '.repeat((level + 2) * 2);
       const spaceStrParams = spaceStr + ' '.repeat(2);
 
-      return utils.trimRows(`
+      return utils.trimFirstRow(`
 ${spaceStr}React.createElement(
 ${spaceStrParams}${componentName},
 ${spaceStrParams}${(!hasAttrs) ? 'null' : `{ ${innerTransformations.getAttsString(componentAtts)} }`}${hasChilds ? ',' : ''}
-${(!hasChilds) ? `${spaceStr})` : childs.join(',\n')}${(hasChilds) ? `${spaceStr})` : '\n'}`);
+${(!hasChilds) ? `${spaceStr})` : childs.join(',\n')}${(hasChilds) ? `\n${spaceStr})` : ''}`);
     },
     getModuleBody(rootSVG) {
       return utils.trimFirstRow(`
