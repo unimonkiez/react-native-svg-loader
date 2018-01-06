@@ -86,4 +86,4 @@ export default class App extends Component {
 * `width` - Width in `number` of the svg.
 * `height` - Height in `number` of the svg
 * `fill` - Fill color of the shapes you want (need to give attribute `fill="replace"` in original svg).
-* `stroke` - Stroke color of the shapes you want (need to give attribute `fill="replace"` in original svg).
+* `stroke` - Stroke color of the shapes you want (need to give attribute `stroke="replace"` in original svg).
