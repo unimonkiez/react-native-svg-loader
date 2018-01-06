@@ -227,10 +227,13 @@ const inspectNode = (node, level = 0) => {
       const isTextValue = node.childNodes[i].nodeValue;
       let nodo;
       if (isTextValue) {
-        nodo = stringCreation.getCreateText({
-          value: node.childNodes[i].nodeValue,
-          level: level + 1,
-        });
+        const value = node.childNodes[i].nodeValue.trim();
+        if (value) {
+          nodo = stringCreation.getCreateText({
+            value,
+            level: level + 1,
+          });
+        }
       } else {
         nodo = inspectNode(node.childNodes[i], level + 1);
       }
