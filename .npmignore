@@ -11,4 +11,3 @@ src/*.test.js
 src/*.test.jsx
 src/*.spec.js
 src/*.spec.jsx
-src/test*.*

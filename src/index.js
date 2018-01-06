@@ -1,5 +1,8 @@
 const utils = require('./utils');
+const getStringCreation = require('./string-creation');
 const xmldom = require('xmldom');
+
+const stringCreation = getStringCreation(false);
 
 const ACCEPTED_SVG_ELEMENTS = [
   'svg',
@@ -94,7 +97,7 @@ const obtainComponentAtts = ({ attributes }, enabledAttributes) => {
     .filter(utils.getEnabledAttributes(enabledAttributes.concat(COMMON_ATTS)))
     .reduce((acc, { nodeName, nodeValue }) => {
       let value;
-      if (['fill', 'stroke'].indexOf(nodeName) === -1 && nodeValue === 'replace') {
+      if (['fill', 'stroke'].indexOf(nodeName) !== -1 && nodeValue === 'replace') {
         value = usePropValue;
       } else if (nodeName === 'transform') {
         value = getTrasnformValueByString(nodeValue);
@@ -108,16 +111,6 @@ const obtainComponentAtts = ({ attributes }, enabledAttributes) => {
 
   return componentAtts;
 };
-
-const getAttsString = atts => Object.keys(atts)
-  .map((attName) => {
-    const attValue = atts[attName];
-    if (attValue === usePropValue) {
-      return `${attName}: ${attName}`;
-    }
-    return `${attName}: ${JSON.stringify(attValue)}`;
-  })
-  .join(', ');
 
 const fixYPosition = (y, node) => {
   if (node.attributes) {
@@ -210,22 +203,12 @@ const createSVGElement = (node, nonTrimmedChilds, level = 0) => {
     componentAtts.y = fixYPosition(componentAtts.y, node);
   }
 
-  const spaceStr = ' '.repeat(level * 2);
-  return utils.trimRows(`
-${spaceStr}React.createElement(${componentName}, { ${getAttsString(componentAtts)} }${childs.length === 0 ? ')' : `, [${childs.join(',')}
-${spaceStr}])`}
-`);
-
-// jsx way, nicer
-
-//   if (childs.length === 0) {
-//     return `${spaceStr}<${componentName} key={${i}} ${getAttsString(componentAtts)} />`;
-//   }
-//   return utils.trimRows(`
-// ${spaceStr}<${componentName} key={${i}} ${getAttsString(componentAtts)}>
-// ${childs.join('\n')}
-// ${spaceStr}</${componentName}>
-// `);
+  return stringCreation.getCreateElement({
+    level,
+    componentName,
+    componentAtts,
+    childs,
+  });
 };
 
 const inspectNode = (node, level = 0) => {
@@ -242,13 +225,18 @@ const inspectNode = (node, level = 0) => {
   if (node.childNodes && node.childNodes.length > 0) {
     for (let i = 0; i < node.childNodes.length; i += 1) {
       const isTextValue = node.childNodes[i].nodeValue;
+      let nodo;
       if (isTextValue) {
-        arrayElements.push(node.childNodes[i].nodeValue);
+        nodo = stringCreation.getCreateText({
+          value: node.childNodes[i].nodeValue,
+          level: level + 1,
+        });
       } else {
-        const nodo = inspectNode(node.childNodes[i], level + 1);
-        if (nodo != null) {
-          arrayElements.push(nodo);
-        }
+        nodo = inspectNode(node.childNodes[i], level + 1);
+      }
+
+      if (nodo != null) {
+        arrayElements.push(nodo);
       }
     }
   }
@@ -263,68 +251,9 @@ const getClassStringBySvgString = (svgString) => {
   );
 
   const doc = new xmldom.DOMParser().parseFromString(inputSvg);
-  const rootSVG = inspectNode(doc.childNodes[0], 2);
+  const rootSVG = inspectNode(doc.childNodes[0]);
 
-  return utils.trimFirstRow(`
-var React = require('react');
-var Svg = require('react-native-svg');
-var getSvgComponent = require('react-native-svg-loader/lib/get-svg-module');
-
-var Circle = Svg.Circle;
-var Ellipse = Svg.Ellipse;
-var G = Svg.G;
-var LinearGradient = Svg.LinearGradient;
-var RadialGradient = Svg.RadialGradient;
-var Line = Svg.Line;
-var Path = Svg.Path;
-var Polygon = Svg.Polygon;
-var Polyline = Svg.Polyline;
-var Rect = Svg.Rect;
-var Text = Svg.Text;
-var TSpan = Svg.TSpan;
-var Defs = Svg.Defs;
-var Stop = Svg.Stop;
-
-function SvgRoughComponent(props) {
-  var width = props.width;
-  var height = props.height;
-  var fill = props.fill;
-  var stroke = props.stroke;
-
-  return (
-${rootSVG}
-  );
-}
-
-module.exports = getSvgComponent(SvgRoughComponent);
-`);
-// jsx way, nicer
-
-//   return utils.trimFirstRow(`
-// import React from 'react';
-// import Svg, {
-//   Circle,
-//   Ellipse,
-//   G,
-//   LinearGradient,
-//   RadialGradient,
-//   Line,
-//   Path,
-//   Polygon,
-//   Polyline,
-//   Rect,
-//   Text,
-//   TSpan,
-//   Defs,
-//   Stop
-// } from 'react-native-svg';
-// import getSvgComponent from 'react-native-svg-loader/lib/get-svg-module';
-
-// const SvgRoughComponent = ({ width, height, fill, stroke }) => (
-// ${rootSVG}
-// );
-
-// module.exports = getSvgComponent(SvgRoughComponent);
-// `);
+  return stringCreation.getModuleBody(rootSVG);
 };
+
 module.exports = source => getClassStringBySvgString(source);

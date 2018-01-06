@@ -22,8 +22,7 @@
         "*.spec.jsx"
       ],
       "env": {
-        "jest": true,
-        "node": false
+        "jest": true
       }
     }
   ]
