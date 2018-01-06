@@ -42,9 +42,9 @@ module.exports = ({ width, height, fill, stroke }) => (
 ## Usage
 * Install
   ```bash
-  npm install --save-dev self-adjusting-interval
+  npm install --save-dev react-native-svg-loader
   # or yarn
-  yarn add -D self-adjusting-interval
+  yarn add -D react-native-svg-loader
   ```
 * Add loader to your `webpack-config`
   ```js
