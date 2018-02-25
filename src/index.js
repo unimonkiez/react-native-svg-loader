@@ -72,11 +72,18 @@ const getTrasnformValueByString = (value) => {
   return value.match(regex).reduce((obj, match) => {
     const [transformName, transformValue] = match.split('(');
 
+
+    let modifiedTransformValue = transformValue;
+
+    if (transformName === 'translate') {
+      modifiedTransformValue = transformValue.split(' ').join(', ');
+    }
+
     return Object.assign(
       {},
       obj,
       {
-        [transformName]: transformValue,
+        [transformName]: modifiedTransformValue,
       },
     );
   }, {});
