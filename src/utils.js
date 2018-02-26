@@ -12,7 +12,7 @@ const utils = {
     if (nodeName === 'style') {
       return nodeValue.split(';')
         .reduce((acc, attribute) => {
-          const [property, value] = attribute.split(':');
+          const [property, value] = attribute.split(':').map(str => str.trim());
           if (property === '') {
             return acc;
           }
