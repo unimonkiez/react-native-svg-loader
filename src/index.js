@@ -66,29 +66,6 @@ const trimElementChilden = children => children.filter(child => (typeof child ==
 
 const usePropValue = 'USE_PROP';
 
-const getTrasnformValueByString = (value) => {
-  const regex = /([^ ]*)\(([^()]*(?=\)))/g; // transform(1, 2) => transform(1, 2
-
-  return value.match(regex).reduce((obj, match) => {
-    const [transformName, transformValue] = match.split('(');
-
-
-    let modifiedTransformValue = transformValue;
-
-    if (transformName === 'translate') {
-      modifiedTransformValue = transformValue.split(' ').join(', ');
-    }
-
-    return Object.assign(
-      {},
-      obj,
-      {
-        [transformName]: modifiedTransformValue,
-      },
-    );
-  }, {});
-};
-
 const obtainComponentAtts = ({ attributes }, enabledAttributes) => {
   const styleAtts = {};
   Array.from(attributes).forEach(({ nodeName, nodeValue }) => {
@@ -106,8 +83,6 @@ const obtainComponentAtts = ({ attributes }, enabledAttributes) => {
       let value;
       if (['fill', 'stroke'].indexOf(nodeName) !== -1 && nodeValue === 'replace') {
         value = usePropValue;
-      } else if (nodeName === 'transform') {
-        value = getTrasnformValueByString(nodeValue);
       } else {
         value = nodeValue;
       }
